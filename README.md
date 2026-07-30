@@ -4,6 +4,8 @@
 [![license](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![python](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://www.python.org/downloads/)
 
+**한국어** · [English](README.en.md)
+
 엑셀 파일의 특정 시트를 SAP Datasphere(HANA) Open SQL Schema 테이블로 올려주는 도구입니다.
 현업 담당자가 직접 쓸 수 있도록 GUI 마법사로 만들었고, 배치 자동화를 위한 CLI도 함께 제공합니다.
 
@@ -14,8 +16,29 @@
 
 > **참고**  
 > 이 도구는 사내 SAP Datasphere 환경을 전제로 만들어졌습니다. 사용하려면 Open SQL Schema
-> 권한이 있는 데이터베이스 사용자가 필요합니다. DRM 파일 처리는 Microsoft Excel이 설치된
-> Windows에서만 동작합니다. 그 외 기능은 macOS·Linux에서도 그대로 쓸 수 있습니다.
+> 권한이 있는 데이터베이스 사용자가 필요하고, **실행하는 PC의 공인 IP가 Datasphere IP
+> 허용 목록에 등록되어 있어야 합니다.** 자세한 내용은 [사전 준비](#사전-준비)를 보세요.
+> DRM 파일 처리는 Microsoft Excel이 설치된 Windows에서만 동작합니다.
+> 그 외 기능은 macOS·Linux에서도 그대로 쓸 수 있습니다.
+
+## 사전 준비
+
+**데이터베이스 사용자**가 필요합니다. Datasphere 테넌트에서 Open SQL Schema에 접근할 수
+있는 사용자를 만들어 두세요.
+([데이터베이스 사용자 생성 문서](https://help.sap.com/docs/SAP_DATASPHERE/be5967d099974c69b77f4549425ca4c0/798e3fd6707940c3bd2219b2d1ebaac2.html?locale=en-US#create-a-database-user-with-password-based-authentication))
+
+**이 도구를 실행하는 PC의 공인 IP를 Datasphere IP 허용 목록에 추가해야 합니다.**
+Datasphere는 허용 목록에 없는 주소에서 들어오는 데이터베이스 직접 연결을 차단하기 때문에,
+이 등록을 하지 않으면 호스트·사용자·비밀번호가 모두 맞아도 접속이 실패합니다. 테넌트
+관리자가 *시스템 → 구성 → IP 허용 목록 → Trusted IPs* 에서 추가하며, 이때 넣는 값은
+`ipconfig`에 보이는 사설 IP가 아니라 **외부에 노출되는 공인 IPv4 주소**입니다. 허용 목록을
+관리하려면 DW Administrator처럼 Data Warehouse General과 System Information 권한이 있는
+글로벌 역할이 필요합니다.
+
+사내망은 공인 IP가 유동으로 바뀌는 경우가 많고 VPN에 접속하면 나가는 주소 자체가 달라지므로,
+어제까지 되던 IP가 갑자기 막힐 수 있습니다. 접속이 되다가 안 되기 시작하면 이 항목부터
+확인하는 편이 빠릅니다.
+([IP 허용 목록 관리 문서](https://help.sap.com/docs/SAP_DATASPHERE/9f804b8efa8043539289f42f372c4862/a3c214514ef94e899459f68f4c1e2a23.html))
 
 ## 주요 기능
 
@@ -205,9 +228,11 @@ Excel 우회 경로를 사용합니다.
 
 DRM 파일 미리보기가 실패한다면 대상 PC에 Excel이 설치되어 있는지, `xlwings`와 `pywin32`가
 설치되어 있는지 확인하세요. HANA 접속이 되지 않으면 사내 방화벽에서 해당 호스트의 443
-아웃바운드가 열려 있는지, 프록시가 필요한 환경인지, Datasphere IP 허용 목록에 현재 공인 IP가
-등록되어 있는지를 순서대로 확인하면 됩니다. 대상 시트를 찾지 못한다는 안내가 나오면
-`[⚙ 일반]` 탭의 시트 이름 키워드가 실제 시트명 접두어와 맞는지 확인하세요.
+아웃바운드가 열려 있는지, 프록시가 필요한 환경인지, 그리고 **현재 공인 IP가 Datasphere
+IP 허용 목록에 등록되어 있는지**를 순서대로 확인하면 됩니다. 마지막 항목이 가장 흔한
+원인이고, 공인 IP가 바뀌거나 VPN에 접속하면 예고 없이 막히므로 [사전 준비](#사전-준비)를
+함께 보세요. 대상 시트를 찾지 못한다는 안내가 나오면 `[⚙ 일반]` 탭의 시트 이름 키워드가
+실제 시트명 접두어와 맞는지 확인하세요.
 
 ## 개발
 
@@ -231,10 +256,20 @@ python -m pytest tests/ -v
 [MIT](LICENSE)
 
 ## 참고
-- *HANA Database 사용자 생성* : 
+
+- *HANA Database 사용자 생성* :
     https://help.sap.com/docs/SAP_DATASPHERE/be5967d099974c69b77f4549425ca4c0/798e3fd6707940c3bd2219b2d1ebaac2.html?locale=en-US#create-a-database-user-with-password-based-authentication
 
-- *Python 설치* : 
+- *IP 허용 목록 관리* — 실행 PC의 공인 IP를 등록해야 접속됩니다 :
+    https://help.sap.com/docs/SAP_DATASPHERE/9f804b8efa8043539289f42f372c4862/a3c214514ef94e899459f68f4c1e2a23.html
+
+- *Datasphere에서 사용하는 IP 주소 FAQ* :
+    https://userapps.support.sap.com/sap/support/knowledge/en/3456052
+
+- *IP 허용 목록 문제인지 판별하는 방법* :
+    https://userapps.support.sap.com/sap/support/knowledge/en/3535314
+
+- *Python 설치* :
 
     (Windows) https://www.python.org/downloads/windows/
     (MacOS) https://www.python.org/downloads/macos/
