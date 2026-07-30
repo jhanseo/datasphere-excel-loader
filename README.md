@@ -231,3 +231,7 @@ python -m pytest tests/ -v
 
     (Windows) https://www.python.org/downloads/windows/
     (MacOS) https://www.python.org/downloads/macos/
+
+---
+
+이 프로젝트의 코드와 문서는 AI(Claude, Codex)의 도움을 받아 작성되었습니다.

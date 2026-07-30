@@ -258,3 +258,7 @@ verification on Windows.
 
     (Windows) https://www.python.org/downloads/windows/
     (MacOS) https://www.python.org/downloads/macos/
+
+---
+
+The code and documentation in this project were written with the assistance of AI (Claude, Codex).
