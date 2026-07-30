@@ -1,4 +1,4 @@
-from ._base import Obj, Signal, pyqtSignal
+from ._base import Obj, pyqtSignal
 from .QtCore import Qt
 
 # --- 단순 no-op 위젯들 -------------------------------------------------

@@ -1,4 +1,4 @@
-from ._base import Signal, pyqtSignal, Obj
+from ._base import pyqtSignal, Obj
 
 class _Enum(int):
     def __new__(cls, v, name=""):
