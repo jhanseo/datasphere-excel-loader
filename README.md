@@ -1,6 +1,6 @@
 # Excel → Datasphere 업로드 마법사
 
-[![tests](https://github.com/OWNER/REPO/actions/workflows/tests.yml/badge.svg)](https://github.com/OWNER/REPO/actions/workflows/tests.yml)
+[![tests](https://github.com/jhanseo/datasphere-excel-loader/actions/workflows/tests.yml/badge.svg)](https://github.com/jhanseo/datasphere-excel-loader/actions/workflows/tests.yml)
 [![license](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![python](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://www.python.org/downloads/)
 
@@ -45,8 +45,8 @@
 ## 설치와 실행
 
 ```
-git clone https://github.com/OWNER/REPO.git
-cd REPO
+git clone https://github.com/jhanseo/datasphere-excel-loader.git
+cd datasphere-excel-loader
 pip install -r requirements.txt
 cp config.ini.example config.ini      # Windows: copy config.ini.example config.ini
 python wizard.py
