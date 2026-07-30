@@ -1,0 +1,10 @@
+pandas>=1.5
+openpyxl>=3.1
+xlrd>=2.0
+hdbcli>=2.17
+PyQt5>=5.15
+# DRM(DRMONE) 파일 미리보기 - Windows + Excel 설치 환경에서만 동작
+xlwings>=0.30; sys_platform == "win32"
+pywin32>=305; sys_platform == "win32"
+# exe 빌드용
+pyinstaller>=6.0

@@ -1,0 +1,63 @@
+name: tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  pytest:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.9", "3.11", "3.13"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+
+      - name: Install dependencies
+        # PyQt5와 hdbcli는 설치하지 않는다.
+        #   · GUI 로직은 tests/mockqt의 Qt 대역으로 검증한다
+        #   · HANA 접속은 가짜 커넥션으로 대체한다 (tests/conftest.py)
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install pandas openpyxl pytest
+
+      - name: Run tests
+        run: python -m pytest tests/ -v
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: python -m pip install pyflakes
+      - name: Check for unused imports and undefined names
+        run: python -m pyflakes excel_loader.py wizard.py tests/
+
+  build-exe:
+    # exe 빌드가 깨지지 않는지 확인 (산출물은 배포하지 않음)
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: python -m pip install --upgrade pip
+      - run: python -m pip install -r requirements.txt
+      - run: python -m PyInstaller --clean --noconfirm wizard.spec
+      - name: Verify the executable exists
+        run: |
+          if (-not (Test-Path "dist/ExcelUploadWizard/ExcelUploadWizard.exe")) {
+            throw "ExcelUploadWizard.exe was not produced"
+          }
+        shell: pwsh

@@ -1,0 +1,71 @@
+; Excel -> HANA Datasphere Loader 설정 예시
+;
+; 이 파일을 config.ini로 복사한 뒤 값을 채워 사용하세요.
+;     Windows : copy config.ini.example config.ini
+;     macOS/Linux : cp config.ini.example config.ini
+;
+; config.ini는 .gitignore에 등록되어 있습니다. 비밀번호가 저장소에
+; 올라가지 않도록 이 예시 파일에는 실제 값을 적지 마세요.
+;
+; Wizard(wizard.py / ExcelUploadWizard.exe)의 각 설정 탭이 config.ini를 읽고 씁니다.
+; [설정 저장] 버튼을 누르면 config.ini가 덮어써집니다(주석은 유지되지 않습니다).
+
+[HANA]
+; Datasphere(HANA) 접속 정보 (Database User / Open SQL Schema)
+host =
+port = 443
+user =
+password =
+schema =
+; 사내 프록시 경유가 필요한 경우에만 입력
+proxy_host =
+proxy_port = 8080
+
+[GENERAL]
+; 시트 이름이 이 문자열로 시작하는 시트만 처리 (대소문자 무시)
+; 테이블명 = 시트명에서 "TABLE_" 접두어 제거 (예: TABLE_T_SALES -> T_SALES)
+sheet_name_keyword = TABLE
+
+; 적재 모드
+;   truncate = TRUNCATE로 기존 데이터를 모두 지우고 새로 적재 (기본)
+;   insert   = 기존 데이터를 남기고 뒤에 추가 (append)
+;   upsert   = PRIMARY KEY가 같으면 갱신, 없으면 추가
+;              대상 테이블에 PRIMARY KEY가 있어야 하며, 테이블을 새로 만들 때는
+;              미리보기에서 [KEY]로 체크한 컬럼이 PRIMARY KEY가 됩니다.
+load_mode = truncate
+
+; 테이블 이름에 파일명을 prefix로 붙일지 여부 (FILE_TABLE_...)
+use_filename_prefix_for_table = false
+
+; DRM 파일 미리보기 시 Excel 창을 화면에 표시할지 여부
+; (보안 로그인 창을 직접 눌러야 하는 환경에서는 true 권장)
+xlwings_visible = true
+
+; 파일 선택 대화상자가 처음 열리는 폴더
+; (CLI에서 --file 없이 실행하면 이 폴더 전체를 처리)
+excel_dir =
+
+[HEADER]
+; header_row: 0부터 시작. 0이면 첫 번째 행이 header
+; auto_header_detect = true 이면 header_row가 비어 있을 때 문자열이 많은 행을 header로 추정
+header_row =
+auto_header_detect = true
+
+; use_description_row = true 이면 header 바로 다음 행을 컬럼 설명으로 읽어
+; CREATE TABLE 시 컬럼 COMMENT로 등록 (해당 행은 데이터에서 제외)
+use_description_row = true
+
+; 미리보기 화면에 표시할 최대 데이터 행 수 (업로드는 항상 전체 행)
+preview_rows = 100
+
+[LOGGING]
+; 로그 파일 저장 폴더 (존재하지 않으면 자동 생성, 상대경로면 실행 파일 기준)
+log_dir = logs
+; DEBUG / INFO / WARNING / ERROR
+log_level = INFO
+
+[ARCHIVE]
+; 업로드에 성공한 원본 파일을 archive 폴더로 이동할지 여부
+move_processed_files = false
+; 상대경로면 원본 파일이 있는 폴더 하위에 생성
+archive_dir = archive
